@@ -25,6 +25,13 @@
       },
       scrollLoad() {
         this.list += 6
+      },
+      dropDownLoad(loaded) {
+        setTimeout(() => {
+          console.log('dropDownLoad...')
+          loaded()
+          this.initComponent()
+        },2000)
       }
     }
   }

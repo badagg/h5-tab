@@ -11,7 +11,8 @@
       return {
         width: 0,
         height: 0,
-        loaded: false
+        loaded: false,
+        scrollTop: 0
       }
     },
     props: {
@@ -39,6 +40,11 @@
         if(this.$children && this.$children[0] && typeof this.$children[0].scrollLoad === 'function') {
           this.$children[0].scrollLoad()
         }
+      },
+      dropDownLoad(cb) {
+        if(this.$children && this.$children[0] && typeof this.$children[0].dropDownLoad === 'function') {
+          this.$children[0].dropDownLoad(cb)
+        }
       }
     },
     mounted() {
@@ -50,7 +56,8 @@
       }
 
       let pane = this.$refs.pane
-      pane.addEventListener('scroll', () => {
+      pane.addEventListener('scroll', (e) => {
+        this.scrollTop = pane.scrollTop
         let sh = pane.scrollHeight - pane.offsetHeight
         if(sh === pane.scrollTop){
           this.scrollLoad()
@@ -67,6 +74,6 @@
     color:#222;
     font-size: 20px;
     background: #fff;
-    overflow: auto;
+    overflow-y: auto;
   }
 </style>
