@@ -90,6 +90,8 @@
             this.loadingR = 360
           }
         }
+
+        this.$children[0].$children[this.p].pauseScroll()
       },
       end(e) {
         if(Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
@@ -104,7 +106,6 @@
               }
             }
           }
-          this.change()
         }else {
           this.loading.style.transition = 'transform .3s'
           if(e.deltaY < this.loadingTop) {
@@ -114,6 +115,9 @@
             this.dropDownLoad()
           }
         }
+
+        this.change()
+        this.$children[0].$children[this.p].startScroll()
       },
       change() {
         this.pane.style.transition = 'transform .3s'

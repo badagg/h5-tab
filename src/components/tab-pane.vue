@@ -45,6 +45,12 @@
         if(this.$children && this.$children[0] && typeof this.$children[0].dropDownLoad === 'function') {
           this.$children[0].dropDownLoad(cb)
         }
+      },
+      pauseScroll() {
+        this.$refs.pane.style['overflow-y'] = 'hidden'
+      },
+      startScroll() {
+        this.$refs.pane.style['overflow-y'] = 'auto'
       }
     },
     mounted() {
