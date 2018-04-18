@@ -24,7 +24,7 @@
         this.list = 10
       },
       scrollLoad() {
-        this.list += 6
+        this.list += 10
       },
       dropDownLoad(loaded) {
         setTimeout(() => {

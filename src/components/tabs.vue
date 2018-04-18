@@ -7,14 +7,14 @@
       </ul>
     </div>
     <div class="tab-content">
-      <v-touch v-on:panmove="move" v-on:panend="end" v-bind:pan-options="{ threshold: 45 }">
+      <v-touch v-on:panmove="move" v-on:panend="end" v-bind:pan-options="{ threshold: 0 }">
         <div class="pane-box" ref="pane" :style="`transform: translate3d(${dx}px, 0, 0);`">
           <slot></slot>
         </div>
       </v-touch>
     </div>
     <div ref="loading" class="loading" :style="`transform: translate3d(0, ${loadingY}px, 0) rotate3d(0,0,1,${loadingR}deg)`">
-      <i :class="['vanfont van-icon-loading', loadingY === loadingTop ? 'van-icon-rotate' : '' ]"></i>
+      <i :class="['vanfont van-icon-loading', spin ? 'van-icon-rotate' : '' ]"></i>
     </div>
   </div>
 </template>
@@ -44,7 +44,8 @@
         pane: null,
         loadingY: 0,
         loadingR: 0,
-        loadingTop: 120
+        loadingTop: 120,
+        spin: false
       }
     },
     computed: {
@@ -80,18 +81,18 @@
           }
 
           this.dx = x + (-this.p * this.width)
+
+          if(Math.abs(e.deltaX) > 0) {
+            this.$children[0].$children[this.p].pauseScroll()
+          }
         }else {
           if(this.$children[0].$children[this.p].scrollTop > 0) return
-          if(e.deltaY < this.loadingTop) {
-            this.loadingY = e.deltaY
-            this.loadingR = 360 * e.deltaY / this.loadingTop
-          }else {
-            this.loadingY = this.loadingTop
-            this.loadingR = 360
+          let dy = e.deltaY * .65
+          if(this.loadingY < this.loadingTop) {
+            this.loadingY = dy
+            this.loadingR = 360 * dy / this.loadingTop
           }
         }
-
-        this.$children[0].$children[this.p].pauseScroll()
       },
       end(e) {
         if(Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
@@ -107,11 +108,16 @@
             }
           }
         }else {
-          this.loading.style.transition = 'transform .3s'
-          if(e.deltaY < this.loadingTop) {
+          if(this.loadingY < this.loadingTop) {
+            this.loading.style.transition = 'transform .25s'
             this.loadingY = 0
             this.loadingR = 0
+            this.spin = false
           }else {
+            this.loading.style.transition = 'transform .1s ease'
+            this.loadingY = this.loadingTop - 30
+            this.spin = true
+
             this.dropDownLoad()
           }
         }
@@ -195,8 +201,8 @@
     .loading {
       position: absolute;
       z-index: 9;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       background: #fff;
       left: 50%;
       top: 0;
@@ -205,7 +211,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,.2);
       .vanfont {
         color: #f60;
-        font-size: 26px;
+        font-size: 27px;
       }
     }
   }
